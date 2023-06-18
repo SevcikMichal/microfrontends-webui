@@ -25,12 +25,12 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 
 	fileContents := string(data)
 
-	tmpl, err := template.New("name").Parse(fileContents)
+	tmpl, err := template.New("index.html").Parse(fileContents)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	pageData := &model.PageData{
+	pageData := &model.TemplateData{
 		Language:                   "en",
 		AppTitle:                   "Micro Frontends WebUI",
 		BaseURL:                    "/",
@@ -82,4 +82,40 @@ func ServeFile(w http.ResponseWriter, r *http.Request) {
 
 	file, _ := os.Open(matches[0])
 	http.ServeContent(w, r, matches[0], time.Now(), file)
+}
+
+func ServeManifestJson(w http.ResponseWriter, r *http.Request) {
+	data, err := os.ReadFile("../web-ui/www/manifest.template.json")
+
+	if err != nil {
+		if os.IsNotExist(err) {
+			log.Println("manifest.template.json does not exist!")
+			http.NotFound(w, r)
+			return
+		}
+		log.Panic(err)
+	}
+
+	fileContents := string(data)
+
+	tmpl, err := template.New("manifest.json").Parse(fileContents)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	pageData := &model.TemplateData{
+		AppTitle:        "Micro Frontends WebUI",
+		AppTitleShort:   "µFE",
+		BaseURL:         "/",
+		AppIconLarge:    "",
+		AppIconSmall:    "",
+		TouchIcon:       "",
+		BackgroundColor: "#ffffff",
+		ThemeColor:      "#ffffff",
+	}
+
+	err = tmpl.Execute(w, pageData)
+	if err != nil {
+		log.Panic(err)
+	}
 }
