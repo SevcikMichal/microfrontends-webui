@@ -15,10 +15,14 @@ func CreateRouter() *mux.Router {
 	// manifest.json
 	router.HandleFunc("/manifest.json", server.ServeManifestJson).Methods("GET")
 
-	// modules, fonts, assets
+	//service-worker.js
+	router.HandleFunc("/sw.mjs", server.ServeFile).Methods("GET")
+
+	// modules, fonts, assets, favicon.ico
 	router.PathPrefix("/modules").HandlerFunc(server.ServeFile).Methods("GET")
 	router.PathPrefix("/assets").HandlerFunc(server.ServeFile).Methods("GET")
 	router.PathPrefix("/fonts").HandlerFunc(server.ServeFile).Methods("GET")
+	router.PathPrefix("/favicon.ico").HandlerFunc(server.ServeFile).Methods("GET")
 
 	return router
 }
