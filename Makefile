@@ -106,7 +106,7 @@ ifndef ignore-not-found
 endif
 
 .PHONY: deploy
-deploy: manifests kustomize ## Deploy webui to the K8s cluster specified in ~/.kube/config.
+deploy: ## Deploy webui to the K8s cluster specified in ~/.kube/config.
 	kubectl apply -k config
 
 .PHONY: undeploy
