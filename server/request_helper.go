@@ -43,12 +43,12 @@ func requestAcceptLanguages(request *http.Request, options map[string]interface{
 			return unsortedLanguages[i].Quality > unsortedLanguages[j].Quality
 		})
 
-		languages := make([]string, len(unsortedLanguages))
+		headerLanguages := make([]string, len(unsortedLanguages))
 		for i, language := range unsortedLanguages {
-			languages[i] = language.Language
+			headerLanguages[i] = language.Language
 		}
 
-		return languages
+		return append(languages, headerLanguages...)
 	}
 
 	// Return the default language if no Accept-Language header is specified
