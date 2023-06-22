@@ -62,7 +62,13 @@ func GetAppIconSmall() string {
 	return "./assets/icon/icon.png"
 }
 
-func GetApplicationDescription() string {
+func GetApplicationDescription(language string) string {
+	value, ok := os.LookupEnv(ApplicationDescription + "_" + strings.ToUpper(language))
+
+	if ok {
+		return value
+	}
+
 	return os.Getenv(ApplicationDescription)
 }
 
@@ -119,7 +125,13 @@ func GetBaseURL() string {
 }
 
 func GetFaviconIco() string {
-	return os.Getenv(FaviconIco)
+	value, ok := os.LookupEnv(FaviconIco)
+
+	if ok {
+		return value
+	}
+
+	return "./assets/icon/favicon.ico"
 }
 
 func GetForcedRefreshPeriodSeconds() string {
@@ -127,7 +139,13 @@ func GetForcedRefreshPeriodSeconds() string {
 }
 
 func GetHttpCspHeader() string {
-	return os.Getenv(HttpCspHeader)
+	value, ok := os.LookupEnv(HttpCspHeader)
+
+	if ok {
+		return value
+	}
+
+	return "default-src 'self'; font-src 'self'; script-src 'strict-dynamic' 'nonce-{NONCE_VALUE}'; worker-src 'self'; manifest-src 'self'; style-src 'self' 'strict-dynamic';"
 }
 
 func GetHttpPort() string {
@@ -141,7 +159,13 @@ func GetHttpPort() string {
 }
 
 func GetManifestTemplate() string {
-	return os.Getenv(ManifestTemplate)
+	value, ok := os.LookupEnv(ManifestTemplate)
+
+	if ok {
+		return value
+	}
+
+	return "manifest.template.json"
 }
 
 func GetObserveNamespaces() []string {
@@ -155,23 +179,53 @@ func GetObserveNamespaces() []string {
 }
 
 func GetPwaMode() string {
-	return os.Getenv(PwaMode)
+	value, ok := os.LookupEnv(PwaMode)
+
+	if ok {
+		return value
+	}
+
+	return "disabled"
 }
 
 func GetServiceWorker() string {
-	return os.Getenv(ServiceWorker)
+	value, ok := os.LookupEnv(ServiceWorker)
+
+	if ok {
+		return value
+	}
+
+	return "sw.mjs"
 }
 
 func GetSwVersion() string {
-	return os.Getenv(SwVersion)
+	value, ok := os.LookupEnv(SwVersion)
+
+	if ok {
+		return value
+	}
+
+	return "v1"
 }
 
-func GetSwSkipFetch() string {
-	return os.Getenv(SwSkipFetch)
+func GetSwSkipFetch() []string {
+	value, ok := os.LookupEnv(SwSkipFetch)
+
+	if ok {
+		return strings.Split(value, ",")
+	}
+
+	return []string{}
 }
 
 func GetTouchIcon() string {
-	return os.Getenv(TouchIcon)
+	value, ok := os.LookupEnv(TouchIcon)
+
+	if ok {
+		return value
+	}
+
+	return "./assets/icon/icon.png"
 }
 
 func GetUserIdHeader() string {
@@ -214,6 +268,12 @@ func GetUserRolesHeader() string {
 	return "x-forwarded-groups"
 }
 
-func GetWebcomponentsSelector() string {
-	return os.Getenv(WebcomponentsSelector)
+func GetWebcomponentsSelector() []string {
+	value, ok := os.LookupEnv(WebcomponentsSelector)
+
+	if ok {
+		return strings.Split(value, ",")
+	}
+
+	return []string{}
 }

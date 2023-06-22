@@ -37,16 +37,16 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pageData := &model.TemplateData{
-		Language:                   "en",
-		AppTitle:                   "Micro Frontends WebUI",
+		Language:                   language,
+		AppTitle:                   configuration.GetApplicationTitle(language),
 		BaseURL:                    configuration.GetBaseURL(),
-		Description:                "Micro Frontends WebUI",
-		MicroFrontendShellContext:  "application-shell",
-		MicroFrontendSelector:      "",
-		ProgresiveWebAppMode:       "false",
-		ContentSecurityPolicyNonce: "123",
-		TouchIcon:                  "",
-		FavIcon:                    "",
+		Description:                configuration.GetApplicationDescription(language),
+		MicroFrontendShellContext:  configuration.GetApplicationShellContext(),
+		MicroFrontendSelector:      strings.Join(configuration.GetWebcomponentsSelector(), ","),
+		ProgresiveWebAppMode:       configuration.GetPwaMode(),
+		ContentSecurityPolicyNonce: "tbd",
+		TouchIcon:                  configuration.GetTouchIcon(),
+		FavIcon:                    configuration.GetFaviconIco(),
 	}
 
 	err = tmpl.Execute(w, pageData)
@@ -76,8 +76,14 @@ func ServeFile(w http.ResponseWriter, r *http.Request) {
 
 func ServeManifestJson(w http.ResponseWriter, r *http.Request) {
 	language, _ := requestMatchLanguage(r, configuration.GetAcceptsLanguages())
-	htmlToFind := "index." + language + ".html"
-	matches := getAllPossibleFiles(htmlToFind)
+	manifest := configuration.GetManifestTemplate()
+	parts := strings.Split(manifest, ".")
+	ext := "." + parts[len(parts)-1]
+	base := strings.Join(parts[:len(parts)-1], ".")
+
+	manifestToFind := base + "." + language + ext
+
+	matches := getAllPossibleFiles(manifestToFind)
 	bestFit := getFirstMatchingFile("web-ui/www", matches)
 
 	data, err := os.ReadFile(bestFit)
@@ -99,12 +105,12 @@ func ServeManifestJson(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pageData := &model.TemplateData{
-		AppTitle:        "Micro Frontends WebUI",
-		AppTitleShort:   "µFE",
+		AppTitle:        configuration.GetApplicationTitle(language),
+		AppTitleShort:   configuration.GetApplicationTitleShort(language),
 		BaseURL:         configuration.GetBaseURL(),
-		AppIconLarge:    "",
-		AppIconSmall:    "",
-		TouchIcon:       "",
+		AppIconLarge:    configuration.GetAppIconLarge(),
+		AppIconSmall:    configuration.GetAppIconSmall(),
+		TouchIcon:       configuration.GetTouchIcon(),
 		BackgroundColor: "#ffffff",
 		ThemeColor:      "#ffffff",
 	}

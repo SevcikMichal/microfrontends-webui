@@ -27,7 +27,15 @@ You can use environment variables to configure the following parameters:
 |APPLICATION_SHELL_CONTEXT|	application-shell	|context of the dynamic web component that is used to retrieve the application shell - used to build the top-level element in the page body |
 |APPLICATION_TITLE_SHORT|Shell|Short version of the language fallback application title, language specific titles are also possible, e.g. APPLICATION_TITLE_SHORT_EN_US |
 |APPLICATION_TITLE|	Application shell	| Language fallback application title, language specific titles are also possible, e.g. APPLICATION_TITLE_EN_US |
-
+|FAVICON_ICO| ./assets/icon/favicon.ico	| link to favicon used as if in `<link rel="icon" href="${FAVICON}">` |
+|HTTP_CSP_HEADER|	default-src 'self'; font-src 'self'; script-src 'strict-dynamic' 'nonce-{NONCE_VALUE}'; worker-src 'self'; manifest-src 'self'; style-src 'self' 'strict-dynamic';	| Content Security Policy header directives for serving the root SPA html page. The placeholder {NONCE_VALUE} will be automatically replaced by the random nonce text used to augment `<script>` elements in the html file. |
+|MANIFEST_TEMPLATE|	manifest.template.json	| Path to the manifest.json template file to be used when registering PWA application. The path must be within the scope of the /app/www folder and relative to it. The file may contains mustache plaholders.|
+|PWA_MODE|	disabled	| (experimental) if set to "pwa" then service worker will be registered and PWA functionality will be provided by the service worker |
+|SERVICE_WORKER|	sw.mjs	| Path to the script to be served as sw.mjs file when registering PWA application. The path must be within the scope of the /app/www/modules folder and relative to it|
+|SW_VERSION|	v1	|Version of the service worker, used to force the browser to update the service worker|
+|SW_SKIP_FETCH|	|	Comma separated list of regular expressions against request paths which should not be fetched by the service worker. All paths that contains /api/ string, or requests to other domains are implicitly skipped reagrdless of this setting. All other requests, including requests toward web components are served with cache-first startegy|
+|TOUCH_ICON|	./assets/icon/icon.png	| link to favicon used as if in `<link rel="apple-touch-icon" hred="${TOUCH_ICON}"`|
+|WEBCOMPONENTS_SELECTOR|	|	comma separate list of key-value pairs, used to filter WebComponent resources handled by this controller|
 ## Built-in web components
 
 Following web components are available for use in the hosted web components:
