@@ -43,11 +43,23 @@ func GetAcceptsLanguages() []string {
 }
 
 func GetAppIconLarge() string {
-	return os.Getenv(AppIconLarge)
+	value, ok := os.LookupEnv(AppIconLarge)
+
+	if ok {
+		return value
+	}
+
+	return "./assets/icon/icon.png"
 }
 
 func GetAppIconSmall() string {
-	return os.Getenv(AppIconSmall)
+	value, ok := os.LookupEnv(AppIconSmall)
+
+	if ok {
+		return value
+	}
+
+	return "./assets/icon/icon.png"
 }
 
 func GetApplicationDescription() string {
@@ -55,15 +67,45 @@ func GetApplicationDescription() string {
 }
 
 func GetApplicationShellContext() string {
-	return os.Getenv(ApplicationShellContext)
+	value, ok := os.LookupEnv(ApplicationShellContext)
+
+	if ok {
+		return value
+	}
+
+	return "application-shell"
 }
 
-func GetApplicationTitleShort() string {
-	return os.Getenv(ApplicationTitleShort)
+func GetApplicationTitleShort(language string) string {
+	value, ok := os.LookupEnv(ApplicationTitleShort + "_" + strings.ToUpper(language))
+
+	if ok {
+		return value
+	}
+
+	value, ok = os.LookupEnv(ApplicationTitleShort)
+
+	if ok {
+		return value
+	}
+
+	return "Shell"
 }
 
-func GetApplicationTitle() string {
-	return os.Getenv(ApplicationTitle)
+func GetApplicationTitle(language string) string {
+	value, ok := os.LookupEnv(ApplicationTitle + "_" + strings.ToUpper(language))
+
+	if ok {
+		return value
+	}
+
+	value, ok = os.LookupEnv(ApplicationTitle)
+
+	if ok {
+		return value
+	}
+
+	return "Application shell"
 }
 
 func GetBaseURL() string {
@@ -95,7 +137,7 @@ func GetHttpPort() string {
 		return value
 	}
 
-	return "80"
+	return "8082"
 }
 
 func GetManifestTemplate() string {

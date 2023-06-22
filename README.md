@@ -14,6 +14,20 @@ The static resources for the UI are under the path `/app/www`, you may eventuall
 
 In the case you want to load content from  other origins, you may need to adapt the environment variable `HTTP_CSP_HEADER`, otherwise the request will be blocked by browsers.
 
+## Configuration
+You can use environment variables to configure the following parameters:
+| Env. Variable | Default Value | Description |
+|---------------|---------------|-------------|
+|BASE_URL| / |Base URL of the server, all absolute links are prefixed with this address|
+|ACCEPTS_LANGUAGES|	en	| List of semicolon- or comma-separated language codes that are supported. If there is a match between the Accept-Language header and this list, then the language of the HTML element is set to that language. In case there is no match, then the HTML language is set to the first language in this list. |
+|HTTP_PORT|8082|port on which the HTTP server listens |
+|APP_ICON_LARGE|	./assets/icon/icon.png |	link to application icon used in manifest" Shall be 512*512 pixels |
+|APP_ICON_SMALL|	./assets/icon/icon.png |	link to application icon used in manifest" Shall be 64*64 pixels |
+|APPLICATION_DESCRIPTION|	|	Some detailed description of the applivation to be part of the index.html meta. Language specific descriptions are also possible, e.g. APPLICATION_DESCRIPTION_EN_US |
+|APPLICATION_SHELL_CONTEXT|	application-shell	|context of the dynamic web component that is used to retrieve the application shell - used to build the top-level element in the page body |
+|APPLICATION_TITLE_SHORT|Shell|Short version of the language fallback application title, language specific titles are also possible, e.g. APPLICATION_TITLE_SHORT_EN_US |
+|APPLICATION_TITLE|	Application shell	| Language fallback application title, language specific titles are also possible, e.g. APPLICATION_TITLE_EN_US |
+
 ## Built-in web components
 
 Following web components are available for use in the hosted web components:
