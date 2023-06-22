@@ -1,6 +1,8 @@
 package server
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"html/template"
 	"log"
 	"net/http"
@@ -36,6 +38,8 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
+	nonce, _ := generateNonce()
+
 	pageData := &model.TemplateData{
 		Language:                   language,
 		AppTitle:                   configuration.GetApplicationTitle(language),
@@ -44,7 +48,7 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 		MicroFrontendShellContext:  configuration.GetApplicationShellContext(),
 		MicroFrontendSelector:      strings.Join(configuration.GetWebcomponentsSelector(), ","),
 		ProgresiveWebAppMode:       configuration.GetPwaMode(),
-		ContentSecurityPolicyNonce: "tbd",
+		ContentSecurityPolicyNonce: nonce,
 		TouchIcon:                  configuration.GetTouchIcon(),
 		FavIcon:                    configuration.GetFaviconIco(),
 	}
@@ -53,10 +57,19 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	cspHeader := configuration.GetHttpCspHeader()
+	cspHeader = strings.ReplaceAll(cspHeader, "{NONCE_VALUE}", nonce)
+
+	w.Header().Set("Content-Security-Policy", cspHeader)
 }
 
 func ServeFile(w http.ResponseWriter, r *http.Request) {
 	fileName := strings.Split(r.URL.Path, "/")[len(strings.Split(r.URL.Path, "/"))-1]
+
+	if fileName == "sw.mjs" {
+		fileName = configuration.GetServiceWorker()
+	}
 
 	matches := getAllPossibleFiles(fileName)
 	bestFit := getFirstMatchingFile("web-ui/www", matches)
@@ -111,12 +124,25 @@ func ServeManifestJson(w http.ResponseWriter, r *http.Request) {
 		AppIconLarge:    configuration.GetAppIconLarge(),
 		AppIconSmall:    configuration.GetAppIconSmall(),
 		TouchIcon:       configuration.GetTouchIcon(),
-		BackgroundColor: "#ffffff",
-		ThemeColor:      "#ffffff",
+		BackgroundColor: configuration.GetManifestBackgroundColor(),
+		ThemeColor:      configuration.GetManifestBackgroundColor(),
 	}
 
 	err = tmpl.Execute(w, pageData)
 	if err != nil {
 		log.Panic(err)
 	}
+}
+
+func generateNonce() (string, error) {
+	codes := make([]byte, 128)
+	_, err := rand.Read(codes)
+	if err != nil {
+		return "", err
+	}
+
+	text := string(codes)
+	nonce := base64.StdEncoding.EncodeToString([]byte(text))
+
+	return nonce, nil
 }

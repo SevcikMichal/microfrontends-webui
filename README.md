@@ -32,10 +32,9 @@ You can use environment variables to configure the following parameters:
 |MANIFEST_TEMPLATE|	manifest.template.json	| Path to the manifest.json template file to be used when registering PWA application. The path must be within the scope of the /app/www folder and relative to it. The file may contains mustache plaholders.|
 |PWA_MODE|	disabled	| (experimental) if set to "pwa" then service worker will be registered and PWA functionality will be provided by the service worker |
 |SERVICE_WORKER|	sw.mjs	| Path to the script to be served as sw.mjs file when registering PWA application. The path must be within the scope of the /app/www/modules folder and relative to it|
-|SW_VERSION|	v1	|Version of the service worker, used to force the browser to update the service worker|
-|SW_SKIP_FETCH|	|	Comma separated list of regular expressions against request paths which should not be fetched by the service worker. All paths that contains /api/ string, or requests to other domains are implicitly skipped reagrdless of this setting. All other requests, including requests toward web components are served with cache-first startegy|
 |TOUCH_ICON|	./assets/icon/icon.png	| link to favicon used as if in `<link rel="apple-touch-icon" hred="${TOUCH_ICON}"`|
 |WEBCOMPONENTS_SELECTOR|	|	comma separate list of key-value pairs, used to filter WebComponent resources handled by this controller|
+|MANIFEST_BACKGROUND_COLOR|#16161d|background color to use in the `manifest.json`|
 ## Built-in web components
 
 Following web components are available for use in the hosted web components:

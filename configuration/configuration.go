@@ -30,6 +30,7 @@ const (
 	UserNameHeader             = "USER_NAME_HEADER"
 	UserRolesHeader            = "USER_ROLES_HEADER"
 	WebcomponentsSelector      = "WEBCOMPONENTS_SELECTOR"
+	ManifestBackgroundColor    = "MANIFEST_BACKGROUND_COLOR"
 )
 
 func GetAcceptsLanguages() []string {
@@ -276,4 +277,14 @@ func GetWebcomponentsSelector() []string {
 	}
 
 	return []string{}
+}
+
+func GetManifestBackgroundColor() string {
+	value, ok := os.LookupEnv(ManifestBackgroundColor)
+
+	if ok {
+		return value
+	}
+
+	return "#16161d"
 }
