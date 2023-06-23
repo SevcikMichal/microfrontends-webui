@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/base64"
 	"html/template"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/SevcikMichal/microfrontends-webui/configuration"
 	"github.com/SevcikMichal/microfrontends-webui/model"
+	"golang.org/x/net/html"
 )
 
 func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
@@ -33,12 +35,39 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 
 	fileContents := string(data)
 
-	tmpl, err := template.New("index.html").Parse(fileContents)
+	node, err := html.Parse(strings.NewReader(fileContents))
 	if err != nil {
 		log.Panic(err)
 	}
 
 	nonce, _ := generateNonce()
+
+	var findAllScriptsAddNonce func(*html.Node)
+	findAllScriptsAddNonce = func(n *html.Node) {
+		if n.Type == html.ElementNode && n.Data == "script" {
+			// Add nonce attribute to script tag
+			attr := html.Attribute{Key: "nonce", Val: nonce}
+			n.Attr = append(n.Attr, attr)
+		}
+
+		// Recursively process child nodes
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			findAllScriptsAddNonce(c)
+		}
+	}
+
+	findAllScriptsAddNonce(node)
+
+	var buf bytes.Buffer
+	if err := html.Render(&buf, node); err != nil {
+		log.Panic(err)
+	}
+	fileContents = buf.String()
+
+	tmpl, err := template.New("index.html").Parse(fileContents)
+	if err != nil {
+		log.Panic(err)
+	}
 
 	pageData := &model.TemplateData{
 		Language:                   language,
@@ -53,15 +82,15 @@ func ServeSinglePageApplication(w http.ResponseWriter, r *http.Request) {
 		FavIcon:                    configuration.GetFaviconIco(),
 	}
 
-	err = tmpl.Execute(w, pageData)
-	if err != nil {
-		log.Panic(err)
-	}
-
 	cspHeader := configuration.GetHttpCspHeader()
 	cspHeader = strings.ReplaceAll(cspHeader, "{NONCE_VALUE}", nonce)
 
 	w.Header().Set("Content-Security-Policy", cspHeader)
+
+	err = tmpl.Execute(w, pageData)
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func ServeFile(w http.ResponseWriter, r *http.Request) {
