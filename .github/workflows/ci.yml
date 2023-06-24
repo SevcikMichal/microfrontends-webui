@@ -39,4 +39,4 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     
     - name: Build and push docker
-      run: make docker-buildx VERSION=${DOCKER_VERSION:-"dev-latest"} docker-push VERSION=${DOCKER_VERSION:-"dev-latest"}
+      run: make docker-buildx VERSION=${DOCKER_VERSION:-"dev-latest"}
