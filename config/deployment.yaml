@@ -14,7 +14,7 @@
        spec:
          containers:
          - name: microfrontends-webui-container
-           image: msevcik/microfrontends-webui:0.0.1
+           image: sevcikmichal/microfrontends-webui:0.0.1
            imagePullPolicy: Always
            ports:
            - name: webapi-port
