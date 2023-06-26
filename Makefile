@@ -10,7 +10,7 @@ VERSION ?= 0.0.1
 #
 # For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
 # michalsevcik.dev/microfrontends-webui-bundle:$VERSION and michalsevcik.dev/microfrontends-webui-catalog:$VERSION.
-IMAGE_TAG_BASE ?= msevcik/microfrontends-webui
+IMAGE_TAG_BASE ?= sevcikmichal/microfrontends-webui
 
 # Image URL to use all building/pushing image targets
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
